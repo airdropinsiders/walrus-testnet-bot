@@ -1,145 +1,98 @@
-const a0_0x58dd86 = function () {
-  let _0x3d439a = true;
-  return function (_0x42c8fb, _0x333935) {
-    const _0x51cc9d = _0x3d439a ? function () {
-      if (_0x333935) {
-        const _0x46f8f5 = _0x333935.apply(_0x42c8fb, arguments);
-        _0x333935 = null;
-        return _0x46f8f5;
-      }
-    } : function () {};
-    _0x3d439a = false;
-    return _0x51cc9d;
-  };
-}();
-const a0_0x4bf012 = a0_0x58dd86(this, function () {
-  return a0_0x4bf012.toString().search("(((.+)+)+)+$").toString().constructor(a0_0x4bf012).search("(((.+)+)+)+$");
-});
-a0_0x4bf012();
-const a0_0x209461 = function () {
-  let _0x4e1029 = true;
-  return function (_0x4b1e47, _0x454fc2) {
-    const _0x514fb4 = _0x4e1029 ? function () {
-      if (_0x454fc2) {
-        const _0xa84f6d = _0x454fc2.apply(_0x4b1e47, arguments);
-        _0x454fc2 = null;
-        return _0xa84f6d;
-      }
-    } : function () {};
-    _0x4e1029 = false;
-    return _0x514fb4;
-  };
-}();
-const a0_0x2c06cd = a0_0x209461(this, function () {
-  let _0x1249f0;
-  try {
-    const _0x36bc5d = Function("return (function() {}.constructor(\"return this\")( ));");
-    _0x1249f0 = _0x36bc5d();
-  } catch (_0x2e9dec) {
-    _0x1249f0 = window;
-  }
-  const _0xd11879 = _0x1249f0.console = _0x1249f0.console || {};
-  const _0x2c63e4 = ['log', "warn", "info", 'error', "exception", "table", 'trace'];
-  for (let _0xee405b = 0x0; _0xee405b < _0x2c63e4.length; _0xee405b++) {
-    const _0x41e722 = a0_0x209461.constructor.prototype.bind(a0_0x209461);
-    const _0x3c1521 = _0x2c63e4[_0xee405b];
-    const _0xf1cf7b = _0xd11879[_0x3c1521] || _0x41e722;
-    _0x41e722.__proto__ = a0_0x209461.bind(a0_0x209461);
-    _0x41e722.toString = _0xf1cf7b.toString.bind(_0xf1cf7b);
-    _0xd11879[_0x3c1521] = _0x41e722;
-  }
-});
-a0_0x2c06cd();
 import { privateKey } from './accounts/accounts.js';
 import { Config } from './config/config.js';
-import { proxyList } from './config/proxy_list.js';
-import a0_0x533804 from './src/core/core.js';
+import { COINENUM } from './src/core/coin/coin_enum.js';
+import a0_0x52d6f4 from './src/core/core.js';
 import { Helper } from './src/utils/helper.js';
-import a0_0x412ced from './src/utils/logger.js';
-async function operation(_0xc2ad2a, _0x3d14c1, _0x503bfe) {
-  const _0x3d8079 = new a0_0x533804(_0xc2ad2a, _0x3d14c1, _0x503bfe);
+import a0_0x47fbca from './src/utils/logger.js';
+async function operation(_0xcba1ac) {
+  const _0x47337e = new a0_0x52d6f4(_0xcba1ac);
   try {
-    await _0x3d8079.connectWallet();
-    await _0x3d8079.getBalance();
-    if (Config.DISPLAYPOINT) {
-      await Helper.retryOperation(_0x3d8079.getPoint.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
+    await _0x47337e.getAccountInfo();
+    await _0x47337e.getBalance(true);
+    await _0x47337e.requestFaucet();
+    const _0x3fb804 = await _0x47337e.checkNFT();
+    if (_0x3fb804 == false) {
+      await _0x47337e.mintNft();
     }
-    await Helper.retryOperation(_0x3d8079.connectSonicDapps.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-    await Helper.retryOperation(_0x3d8079.getUserInfo.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-    await Helper.retryOperation(_0x3d8079.getUserInvite.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-    await Helper.retryOperation(_0x3d8079.createSession.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-    await Helper.retryOperation(_0x3d8079.permitContract.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-    while (_0x3d8079.limit == false) {
-      await Helper.retryOperation(_0x3d8079.playPlinko.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-      if (Config.DISPLAYPOINT) {
-        await Helper.retryOperation(_0x3d8079.getPoint.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
+    const _0x3d794e = _0x47337e.balance;
+    const _0x67e942 = _0x3d794e.find(_0x3b1ae4 => _0x3b1ae4.coinType === COINENUM.SUI);
+    const _0x36ce85 = _0x67e942 ? _0x67e942.totalBalance : 0x0;
+    for (const _0x273ac3 of new Array(Config.SWAPCOUNT)) {
+      if (_0x36ce85 < Config.TXAMOUNTMAX) {
+        throw Error("Min balance is " + Config.TXAMOUNTMAX + " SUI");
       }
+      try {
+        await _0x47337e.exSuiToWal();
+        await _0x47337e.exWalToSui();
+        _0x47337e.txCount += 0x1;
+      } catch (_0x5c7037) {}
     }
-    while (_0x3d8079.wheelLimit == false) {
-      await Helper.retryOperation(_0x3d8079.playWheel.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-      if (Config.DISPLAYPOINT) {
-        await Helper.retryOperation(_0x3d8079.getPoint.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-      }
+    if (_0x36ce85 < Config.TXAMOUNTMAX) {
+      throw Error("Min balance is " + Config.TXAMOUNTMAX + " SUI");
     }
-    while (_0x3d8079.mineLimit == false) {
-      await Helper.retryOperation(_0x3d8079.playMine.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-      if (Config.DISPLAYPOINT) {
-        await Helper.retryOperation(_0x3d8079.getPoint.bind(_0x3d8079, false), _0xc2ad2a, _0x3d8079);
-      }
-    }
-    const _0x4cb859 = privateKey.find(_0x581a35 => _0x581a35.pk == _0xc2ad2a);
-    const _0x29c2c8 = privateKey.indexOf(_0x4cb859);
-    await Helper.delay(43200000, _0xc2ad2a, "Account " + (_0x29c2c8 + 0x1) + " Processing Done, Delaying for " + Helper.msToTime(43200000), _0x3d8079);
-    await operation(_0xc2ad2a, _0x3d14c1, _0x503bfe);
-  } catch (_0x4b03ad) {
-    if (_0x4b03ad.message) {
-      await Helper.delay(0x2710, _0xc2ad2a, "Error : " + _0x4b03ad.message + ", Retry again after 10 Second", _0x3d8079);
+    await _0x47337e.exSuiToWal();
+    await _0x47337e.stakeWalToOperator();
+    const _0x4c9b98 = Config.DELAYINHOURS ?? 0x6;
+    const _0x3f5dc0 = 3600000 * _0x4c9b98;
+    await Helper.delay(_0x3f5dc0, _0xcba1ac, "Account " + (privateKey.indexOf(_0xcba1ac) + 0x1) + " Processing Done, Delaying for " + Helper.msToTime(_0x3f5dc0), _0x47337e);
+    await operation(_0xcba1ac);
+  } catch (_0x52e31c) {
+    if (_0x52e31c.message) {
+      await Helper.delay(0x2710, _0xcba1ac, "Error : " + _0x52e31c.message + ", Retry again after 10 Second", _0x47337e);
     } else {
-      await Helper.delay(0x2710, _0xc2ad2a, "Error :" + JSON.stringify(_0x4b03ad) + ", Retry again after 10 Second", _0x3d8079);
+      await Helper.delay(0x2710, _0xcba1ac, "Error :" + JSON.stringify(_0x52e31c) + ", Retry again after 10 Second", _0x47337e);
     }
-    await operation(_0xc2ad2a, _0x3d14c1, _0x503bfe);
+    await operation(_0xcba1ac);
   }
 }
 async function startBot() {
-  return new Promise(async (_0xf2803e, _0x216b8a) => {
+  const _0x15dd32 = {
+    'xLtaK': "Please input your account first on accounts.js file",
+    'ykiBG': function (_0x2883bb) {
+      return _0x2883bb();
+    }
+  };
+  return new Promise(async (_0x221f31, _0x341731) => {
     try {
-      a0_0x412ced.info("BOT STARTED");
-      const _0xfa7697 = [];
-      if (proxyList.length != privateKey.length && proxyList.length != 0x0) {
-        throw Error("You Have " + privateKey.length + " Accounts But Provide " + proxyList.length);
+      a0_0x47fbca.info("BOT STARTED");
+      if (privateKey.length == 0x0) {
+        throw Error("Please input your account first on accounts.js file");
       }
-      for (const _0x2ad4a7 of privateKey) {
-        if (!_0x2ad4a7.pk) {
-          throw Error("Your accounts.js is malformed, please fix it first, see accounts_tmp.js for the format");
-        }
-        const _0x55af8a = privateKey.indexOf(_0x2ad4a7);
-        const _0x3b968b = proxyList[_0x55af8a];
-        _0xfa7697.push(operation(_0x2ad4a7.pk, _0x2ad4a7.smartWalletAddress, _0x3b968b));
+      const _0x1535c5 = [];
+      for (const _0x69befc of privateKey) {
+        _0x1535c5.push(operation(_0x69befc));
       }
-      await Promise.all(_0xfa7697);
-      _0xf2803e();
-    } catch (_0xb6d9ba) {
-      a0_0x412ced.info("BOT STOPPED");
-      a0_0x412ced.error(JSON.stringify(_0xb6d9ba));
-      _0x216b8a(_0xb6d9ba);
+      await Promise.all(_0x1535c5);
+      _0x221f31();
+    } catch (_0x34d74d) {
+      a0_0x47fbca.info("BOT STOPPED");
+      a0_0x47fbca.error(JSON.stringify(_0x34d74d));
+      _0x341731(_0x34d74d);
     }
   });
 }
 (async () => {
+  const _0x17ba49 = {
+    'wYvik': 'jGKWC',
+    'CEpqr': "lhkwr"
+  };
   try {
-    a0_0x412ced.clear();
-    a0_0x412ced.info('');
-    a0_0x412ced.info("Application Started");
-    console.log("Soniclabs Arcade Testnet BOT");
+    a0_0x47fbca.clear();
+    a0_0x47fbca.info('');
+    a0_0x47fbca.info("Application Started");
+    console.log("WALRUS BOT");
     console.log();
     console.log("Join Channel : https://t.me/AirdropInsiderID");
     console.log("Dont forget to run git pull to keep up to date");
     console.log();
     console.log();
     Helper.showSkelLogo();
+    if (privateKey.length < 0x1) {
+      throw Error("Please set up accounts.js first");
+    }
     await startBot();
-  } catch (_0x31bed1) {
-    console.log("Error During executing bot", _0x31bed1);
-    await startBot();
+  } catch (_0x178215) {
+    console.log("Error During executing bot", _0x178215);
+    throw _0x178215;
   }
 })();
