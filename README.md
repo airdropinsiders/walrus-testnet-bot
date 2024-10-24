@@ -35,7 +35,7 @@ Network : SUI
 ### Linux
 1. Clone project repo
    ```
-   git clone https://github.com/vinskasenda/walrus-testnet-bot.git && cd walrus-testnet-bot
+   git clone https://github.com/airdropinsiders/walrus-testnet-bot.git && cd walrus-testnet-bot
    ```
 2. Run
    ```
@@ -62,7 +62,7 @@ Network : SUI
 1. Open your `Command Prompt` or `Power Shell`.
 2. Clone project repo
    ```
-   git clone https://github.com/vinskasenda/walrus-testnet-bot.git
+   git clone https://github.com/airdropinsiders/walrus-testnet-bot.git
    ```
    and cd to project dir
    ```
